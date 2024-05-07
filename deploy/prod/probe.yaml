@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: near-mainnet
+spec:
+  staticConfigs:
+    - targets:
+        - http://near-exporter.guardian.svc.cluster.local
+      labels:
+        job: near
+  metricsPath: /probe
+  relabelings:
+    - replacement: "https://rpc.mainnet.near.org"
+      targetLabel: __param_target
