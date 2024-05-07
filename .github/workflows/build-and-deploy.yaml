@@ -1,0 +1,30 @@
+name: Build and Deploy near-exporter Workflow
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+    paths-ignore:
+      - "deploy/**"
+jobs:
+  build:
+    uses: NaturalSelectionLabs/Daedalus/.github/workflows/docker-tpl.yaml@main
+    with:
+      images: rss3/near-exporter
+      context: .
+      dockerfile: ./Dockerfile
+    secrets: inherit
+  # deploy-prod:
+  #   uses: NaturalSelectionLabs/Daedalus/.github/workflows/deploy-v3-tpl.yaml@main
+  #   needs:
+  #     - build
+  #   with:
+  #     images: rss3/blackbox-hd
+  #     tag: sha-${{ github.sha }}
+  #     cluster: prod
+  #     namespace: guardian
+  #     releaseName: blackbox-http-discovery
+  #     revision: main
+  #     dir: deploy/prod
+  #   secrets: inherit
