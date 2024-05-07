@@ -35,7 +35,7 @@ fn metrics_string(f: Vec<MetricFamily>) -> String {
 #[allow(dead_code)]
 struct ProbeParams {
     account_id: Option<String>,
-    url: Option<String>,
+    target: Option<String>,
 }
 
 pub fn probe() -> Router {
@@ -50,12 +50,12 @@ pub fn probe() -> Router {
         )
         .unwrap();
 
-        let url = match params.url {
-            Some(url) => url,
+        let target = match params.target {
+            Some(target) => target,
             None => {
                 return (
                     StatusCode::BAD_REQUEST,
-                    String::from("Missing required parameter: url"),
+                    String::from("Missing required parameter: target"),
                 )
             }
         };
@@ -70,7 +70,7 @@ pub fn probe() -> Router {
             }
         };
 
-        let mut n = collector::ViewAccountMetricsCollector::new(desc, url, account_id);
+        let mut n = collector::ViewAccountMetricsCollector::new(desc, target, account_id);
 
         n.fetch().await;
 

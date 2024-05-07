@@ -1,14 +1,21 @@
-apiVersion: monitoring.coreos.com/v1alpha1
-kind: ScrapeConfig
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
 metadata:
   name: near-mainnet
 spec:
-  staticConfigs:
-    - targets:
-        - http://near-exporter.guardian.svc.cluster.local
-      labels:
-        job: near
-  metricsPath: /probe
-  relabelings:
-    - replacement: "https://rpc.mainnet.near.org"
-      targetLabel: __param_target
+  jobName: near
+  module: default
+  prober:
+    url: near-exporter.guardian.svc.cluster.local
+    path: /probe
+  targets:
+    staticConfig:
+      static:
+        - vsl-submitter.near
+      relabelingConfigs:
+        - replacement: "https://rpc.mainnet.near.org"
+          targetLabel: __param_target
+
+        - sourceLabels: [__address__]
+          replacement: "$1"
+          targetLabel: __param_account_id

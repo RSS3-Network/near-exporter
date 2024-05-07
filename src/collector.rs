@@ -10,23 +10,23 @@ use crate::near;
 
 pub struct ViewAccountMetricsCollector {
     desc: Desc,
-    url: String,
+    target: String,
     account_id: String,
     result: Option<near_primitives::views::AccountView>,
 }
 
 impl ViewAccountMetricsCollector {
-    pub fn new(desc: Desc, url: String, account_id: String) -> Self {
+    pub fn new(desc: Desc, target: String, account_id: String) -> Self {
         ViewAccountMetricsCollector {
             desc,
-            url,
+            target,
             account_id,
             result: None,
         }
     }
 
     pub async fn fetch(&mut self) {
-        let result = near::fetch_data(self.url.clone(), self.account_id.clone()).await;
+        let result = near::fetch_data(self.target.clone(), self.account_id.clone()).await;
         match result {
             Ok(account) => {
                 self.result = Some(account);

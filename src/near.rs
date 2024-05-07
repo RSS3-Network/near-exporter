@@ -4,10 +4,10 @@ use near_primitives::types::{AccountId, BlockReference, Finality};
 use near_primitives::views::{AccountView, QueryRequest};
 
 pub async fn fetch_data(
-    url: String,
+    target: String,
     account_string_id: String,
 ) -> Result<AccountView, Box<dyn std::error::Error>> {
-    let client = JsonRpcClient::connect(url);
+    let client = JsonRpcClient::connect(target);
 
     let account_id = account_string_id.parse::<AccountId>()?;
 
