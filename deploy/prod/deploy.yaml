@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: near-exporter
+spec:
+  selector:
+    matchLabels:
+      app: near-exporter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: near-exporter
+    spec:
+      containers:
+        - name: near-exporter
+          image: rss3/near-exporter
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10

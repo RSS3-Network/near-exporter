@@ -97,3 +97,10 @@ pub fn metrics() -> Router {
     }
     route("/metrics", get(handler))
 }
+
+pub fn healthz() -> Router {
+    async fn handler() -> String {
+        String::from("OK")
+    }
+    route("/healthz", get(handler))
+}

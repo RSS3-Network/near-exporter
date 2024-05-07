@@ -12,6 +12,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .merge(router::metrics())
+        .merge(router::healthz())
         .merge(router::probe());
 
     let listener = TcpListener::bind(SocketAddr::from(([0, 0, 0, 0], 8080))).await?;
