@@ -1,21 +1,12 @@
-FROM messense/rust-musl-cross:x86_64-musl as builder
+FROM rust:1.77-slim-bullseye as builder
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 
-COPY Cargo.toml Cargo.lock ./
-COPY src ./src
+COPY . .
 
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/usr/src/target \
-    cargo install --path .
+RUN cargo build --release
 
+FROM debian:bullseye-slim
 
-FROM alpine as runner
-
-RUN apk --no-cache add ca-certificates
-
-COPY --from=builder /root/.cargo/bin/near-exporter /usr/local/bin/near-exporter
-
-USER 1000
-
-ENTRYPOINT ["/usr/local/bin/near-exporter"]
+COPY --from=builder /usr/src/app/target/release/near-exporter /usr/local/bin/near-exporter
+ENTRYPOINT [ "/usr/local/bin/near-exporter" ]
